@@ -1,14 +1,17 @@
 # Run
 Run any language code with input and output file.
 
+
 ## Currently supported languages
 - C
 - C++
 - Python
 
+
 ## Pre-requisites
 - Python 3
 Download latest version of python from [here](https://www.python.org/downloads/)
+
 
 ## Installation with git clone
 ```bash
@@ -39,6 +42,7 @@ $ run install <language>
 $ run install python 3.11.0
 ```
 
+
 ### Run a code
 ```bash
 $ run hello.py
@@ -50,6 +54,8 @@ $ run hello.cpp
 
 __Note: Supported python, c++, c__
 
+
+
 ### Run a code with input file [Any text file is supported]
 ```bash
 $ run hello.py -i input.tx
@@ -58,6 +64,7 @@ $ run hello.py -i input.tx
 ```bash
 $ run hello.cpp -i input.txt
 ```
+
 
 ### Run a code with output file [Any text file is supported]
 ```bash
@@ -70,10 +77,12 @@ $ run hello.py -o output.txt
 $ run hello.py -i input.txt -o output.txt
 ```
 
+
 ### Run a code with expected output file [Any text file is supported]
 ```bash
 $ run hello.py -e expected.txt
 ```
+
 
 ### Run a code with time limit [in seconds]
 ```bash
