@@ -12,7 +12,6 @@ Download latest version of python from [here](https://www.python.org/downloads/)
 
 ## Installation with git clone
 ```bash
-
 $ git clone https://github.com/shhossain/run
 $ cd run
 $ python setup.py
