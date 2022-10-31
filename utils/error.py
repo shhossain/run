@@ -7,4 +7,4 @@ class Error:
 
     def print(self, error_msg):
         raise Exception(
-            f"[Time {self.current_time}] '{self.file_path}' : {error_msg}")
+            f"[Time {self.current_time}] '{self.file_path}' : \n{error_msg}")

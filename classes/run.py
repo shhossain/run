@@ -139,7 +139,7 @@ class RUN:
         # checking for runtime error
         self.return_code = proc.returncode
         if self.return_code != 0:
-            self.error.print(self.runtime_error_message)
+            self.error.print(self.runtime_error_message.decode("utf-8"))
 
         # writing output
         self.write_output()
@@ -188,7 +188,7 @@ class RUN:
         # checking for runtime error
         self.return_code = p.returncode
         if self.return_code != 0:
-            self.error.print(self.runtime_error_message)
+            self.error.print(self.runtime_error_message.decode("utf-8"))
 
         # writing output
         self.write_output()
@@ -237,7 +237,7 @@ class RUN:
         # checking for runtime error
         self.return_code = p.returncode
         if self.return_code != 0:
-            self.error.print(self.runtime_error_message)
+            self.error.print(self.runtime_error_message.decode("utf-8"))
 
         # writing output
         self.write_output()
