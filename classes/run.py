@@ -8,6 +8,7 @@ import subprocess
 from subprocess import PIPE, Popen
 from utils.error import Error
 from utils.env import Env
+import psutil
 
 
 current_file_path = os.path.dirname(os.path.realpath(__file__))
@@ -23,6 +24,11 @@ def detect_language(file_name):
             return language
     return None
 
+
+def process_memory():
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    return mem_info.rss
 
 class System(enum.Enum):
     WINDOWS = 1
@@ -51,8 +57,8 @@ class RUN:
         self.error = Error(file_path)
         self.env = Env()
 
-        self.execution_time = 0
-        self.memory_usage = 0
+        self.execution_time = -1
+        self.memory_usage = -1
         self.compiler_error_message = None
         self.runtime_error_message = None
         self.output = None
@@ -126,10 +132,12 @@ class RUN:
         # checking for timeout
         try:
             start = time.time()
+            mstart = process_memory()
             self.output, self.runtime_error_message = proc.communicate(
                 iinput, timeout=self.timeout)
             self.execution_time = time.time() - start
             self.output = self.output.decode("utf-8").strip()
+            self.memory_usage = process_memory() - mstart
         except subprocess.TimeoutExpired as e:
             proc.kill()
             self.runtime_error_message = f"Time Limit Exceeded. Given time limit is {self.timeout} seconds."
@@ -175,10 +183,12 @@ class RUN:
         # checking for timeout
         try:
             start = time.time()
+            mstart = process_memory()
             self.output, self.runtime_error_message = p.communicate(
                 iinput, timeout=self.timeout)
             self.execution_time = time.time() - start
             self.output = self.output.decode("utf-8").strip()
+            self.memory_usage = process_memory() - mstart
         except subprocess.TimeoutExpired as e:
             p.kill()
             self.runtime_error_message = f"Time Limit Exceeded. Given time limit is {self.timeout} seconds."

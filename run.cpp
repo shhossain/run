@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
     string file_dir = file_path.substr(0, file_path.find_last_of("\\/"));
     string py_file_path = file_dir + "\\main.py";
 
+    cout << "Je";
+
     string cmd = "py " + py_file_path;
     for (int i = 1; i < argc; i++)
     {

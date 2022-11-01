@@ -112,6 +112,7 @@ class Parser:
             self.match_output(run.expected_output, run.output)
 
         print(f"[Finished in {round(run.execution_time, 2)} seconds]")
+        print(f"[Memory used: {round(run.memory_usage/1024/1024, 2)} MB]")
 
     def match_output(self, expected_output_file, output):
         elines = expected_output_file.splitlines()
