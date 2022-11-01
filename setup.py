@@ -15,7 +15,8 @@ if current_file_folder not in path:
 
 def setup_linux(cmd):
     # compile run.cpp file
-    os.system("g++ -o run run.cpp")
+    cmd = f"cd {current_file_folder} && g++ -o run run.cpp"
+    os.system(cmd)
 
     # save current file folder in .bashrc
     file_path = os.path.join(os.path.expanduser("~"), ".bashrc")
