@@ -13,6 +13,7 @@ path = os.environ.get("PATH", "")
 if current_file_folder not in path:
     os.environ["PATH"] = current_file_folder + os.pathsep + path
 
+
 def setup_linux(cmd):
     # compile run.cpp file
     cmd = f"cd {current_file_folder} && g++ -o run run.cpp"
@@ -23,6 +24,8 @@ def setup_linux(cmd):
     with open(file_path, "a") as f:
         f.write(cmd)
 
+    os.system("source ~/.bashrc")
+
 
 win_cmd = "setx PATH " + f'"{os.environ["PATH"]}"'
 linux_cmd = "export PATH=" + f'"{os.environ["PATH"]}"'
@@ -32,4 +35,3 @@ if get_system() == System.WINDOWS:
     os.system(win_cmd)
 else:
     setup_linux(linux_cmd)
-
