@@ -9,9 +9,12 @@ int main(int argc, char *argv[])
     string file_dir = file_path.substr(0, file_path.find_last_of("\\/"));
     string py_file_path = file_dir + "\\main.py";
 
-    cout << "Je";
+    // python executable if linux python3 else python
+    string python_exec = "python3";
+    if (system(NULL))
+        python_exec = "python";
 
-    string cmd = "py " + py_file_path;
+    string cmd = python_exec + " " + py_file_path;
     for (int i = 1; i < argc; i++)
     {
         cmd += " ";
