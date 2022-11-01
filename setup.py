@@ -24,8 +24,6 @@ def setup_linux(cmd):
     with open(file_path, "a") as f:
         f.write(cmd)
 
-    os.system("source ~/.bashrc")
-
 
 win_cmd = "setx PATH " + f'"{os.environ["PATH"]}"'
 linux_cmd = "export PATH=" + f'"{os.environ["PATH"]}"'
