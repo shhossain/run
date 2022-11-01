@@ -19,6 +19,9 @@ with open(languages_path, "r") as f:
 
 
 def detect_language(file_name):
+    if file_name[-1] == '"':
+        file_name = file_name[:-1]
+
     for language in languages:
         if file_name.endswith(languages[language]["extention"]):
             return language
@@ -49,6 +52,13 @@ def get_system():
 
 class RUN:
     def __init__(self, file_path, **kw):
+        if " " in file_path:
+            file_path = f'"{file_path}"'
+
+
+
+
+
         self.path = file_path
         self.language = detect_language(file_path)
         self.base_name = os.path.basename(file_path).split(".")[0]
@@ -97,7 +107,7 @@ class RUN:
     def write_output(self):
         if self.output_file is not None:
             with open(self.output_file, "w") as f:
-                f.write(self.output)
+                f.write(self.output.replace("\r", ""))
                 return True
         return None
 
@@ -131,13 +141,13 @@ class RUN:
         proc = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         # checking for timeout
         try:
-            start = time.time()
             mstart = process_memory()
+            start = time.time()
             self.output, self.runtime_error_message = proc.communicate(
                 iinput, timeout=self.timeout)
             self.execution_time = time.time() - start
-            self.output = self.output.decode("utf-8").strip()
             self.memory_usage = process_memory() - mstart
+            self.output = self.output.decode("utf-8").strip()
         except subprocess.TimeoutExpired as e:
             proc.kill()
             self.runtime_error_message = f"Time Limit Exceeded. Given time limit is {self.timeout} seconds."
@@ -152,10 +162,12 @@ class RUN:
         # writing output
         self.write_output()
 
+
+
     def run_cpp(self):
         # setting compiler options
         cmd = "g++"
-        self.executable_exists(cmd)
+        self.executable_exists("g++")
         if self.compiler_options is not None:
             cmd += " " + self.compiler_options
         cmd += f" {self.path} -o {self.base_name}"
@@ -177,18 +189,19 @@ class RUN:
         self.read_input()
         iinput = self.input.encode("utf-8") if self.input else None
 
+        # print("cmd", cmd)
         # running executable
         p = Popen(cmd, shell=True, stdout=PIPE,
                   stderr=PIPE, stdin=PIPE)
         # checking for timeout
         try:
-            start = time.time()
             mstart = process_memory()
+            start = time.time()
             self.output, self.runtime_error_message = p.communicate(
                 iinput, timeout=self.timeout)
             self.execution_time = time.time() - start
-            self.output = self.output.decode("utf-8").strip()
             self.memory_usage = process_memory() - mstart
+            self.output = self.output.decode("utf-8").strip()
         except subprocess.TimeoutExpired as e:
             p.kill()
             self.runtime_error_message = f"Time Limit Exceeded. Given time limit is {self.timeout} seconds."
@@ -233,10 +246,12 @@ class RUN:
                   stderr=PIPE, stdin=PIPE)
         # checking for timeout
         try:
+            mstart = process_memory()
             start = time.time()
             self.output, self.runtime_error_message = p.communicate(
                 iinput, timeout=self.timeout)
             self.execution_time = time.time() - start
+            self.memory_usage = process_memory() - mstart
             self.output = self.output.decode("utf-8").strip()
         except subprocess.TimeoutExpired as e:
             p.kill()
@@ -282,10 +297,12 @@ class RUN:
                   stderr=PIPE, stdin=PIPE)
         # checking for timeout
         try:
+            mstart = process_memory()
             start = time.time()
             self.output, self.runtime_error_message = p.communicate(
                 iinput, timeout=self.timeout)
             self.execution_time = time.time() - start
+            self.memory_usage = process_memory() - mstart
             self.output = self.output.decode("utf-8").strip()
         except subprocess.TimeoutExpired as e:
             p.kill()

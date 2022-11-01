@@ -2,6 +2,7 @@ from classes import INSTALL, RUN
 from utils import Error
 import os
 import sys
+import re
 
 # examples
 # main.py <file> -i <input> -o <output> -t <timeout> -e <expected> -o <compiler_options>
@@ -9,6 +10,12 @@ import sys
 # run install <python|c|cpp|java> -v <version>
 
 # -i, --input, -o, --output, -t, --timeout, -v, --version (optional)
+
+
+def get_version():
+    # current folder path
+    current_folder_path = os.path.dirname(os.path.abspath(__file__))
+    return open(os.path.join(current_folder_path, "VERSION"), "r").read()
 
 
 class Parser:
@@ -23,7 +30,15 @@ class Parser:
         if len(self.args) == 0:
             self.error.print("No arguments given")
 
-        if "install" in args:
+        if self.args[0] == "-v" or self.args[0] == "--version":
+            txt = f"Run {get_version()}"
+            print(txt)
+            return
+        elif self.args[0] == "-h" or self.args[0] == "--help":
+            self.run_help()
+            return
+
+        elif self.args[0] == "install":
             # next arg is language
             idx = args.index("install")
             self.language = args[idx+1]
@@ -49,8 +64,23 @@ class Parser:
         install = INSTALL(self.language, self.version)
         install.install()
 
+    def fix_file_path(self):
+        path = ""
+        if not os.path.isfile(self.args[0]):
+            for i in range(len(self.args)):
+                if self.args[i].startswith("-"):
+                    break
+                path += self.args[i] + " "
+        else:
+            path = self.args[0]
+
+        if path[-1] == " ":
+            path = path[:-1]
+
+        return path
+
     def run(self):
-        file_path = self.args[0]
+        file_path = self.fix_file_path()
         input_file = None
         output_file = None
         expeted_output_file = None
@@ -91,14 +121,6 @@ class Parser:
             compiler_options = op["-c"]
         elif op["--options"] is not None:
             compiler_options = op["--options"]
-
-        # check if file exists
-        if not os.path.exists(file_path):
-            self.error.print("File not found")
-
-        # check if file is a file
-        if not os.path.isfile(file_path):
-            self.error.print(f"{file_path} is not a file")
 
         run = RUN(file_path, input_file=input_file, output_file=output_file, timeout=timeout,
                   compiler_options=compiler_options, expected_output=expeted_output_file)
