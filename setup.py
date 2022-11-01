@@ -9,10 +9,19 @@ if ":" in current_file_folder:
     current_file_folder = current_file_folder[:1].upper(
     ) + current_file_folder[1:]
 
-
 path = os.environ.get("PATH", "")
 if current_file_folder not in path:
     os.environ["PATH"] = current_file_folder + os.pathsep + path
+
+def setup_linux(cmd):
+    # compile run.cpp file
+    os.system("g++ -o run run.cpp")
+
+    # save current file folder in .bashrc
+    file_path = os.path.join(os.path.expanduser("~"), ".bashrc")
+    with open(file_path, "a") as f:
+        f.write(cmd)
+
 
 win_cmd = "setx PATH " + f'"{os.environ["PATH"]}"'
 linux_cmd = "export PATH=" + f'"{os.environ["PATH"]}"'
@@ -21,7 +30,5 @@ linux_cmd = "export PATH=" + f'"{os.environ["PATH"]}"'
 if get_system() == System.WINDOWS:
     os.system(win_cmd)
 else:
-    # save current file folder in .bashrc
-    file_path = os.path.join(os.path.expanduser("~"), ".bashrc")
-    with open(file_path, "a") as f:
-        f.write(linux_cmd)
+    setup_linux(linux_cmd)
+
